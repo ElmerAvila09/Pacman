@@ -23,7 +23,9 @@ ghosts = [
     [vector(100, -160), vector(-5, 0)],
 ]
 # Matriz del tablero para la interfaz
-
+'''
+Se modifico el mapa para tener un panorama mas dividido en cuadrantes, lo cual limita el flujo de movimiento y dificulta el juego
+'''
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
@@ -187,7 +189,7 @@ def move():
         if abs(pacman - point) < 20:
             return
 
-
+    #Se cambia a 70 milisegundos cada actualizacion para que se vea mas fluido el juego
     ontimer(move, 70)
 
 '''
