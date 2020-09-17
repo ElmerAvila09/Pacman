@@ -1,7 +1,16 @@
+"""
+Intituto Tecnologico de Estudios Superiores de Monterrey
+Equipo "Default":
+Daniel de Zamacona Madero - A01570576
+Elmer Osiel Avila Vargas - A00826359
+El programa despliega un juego de snake con variantes de colores y movimientos de la comida
+Fecha de Modificacion: 16/9/2020
+"""
 from random import choice
 from turtle import *
 from freegames import floor, vector
 
+# Declaracion de valores iniciales
 state = {'score': 0}
 path = Turtle(visible=False)
 writer = Turtle(visible=False)
@@ -13,6 +22,7 @@ ghosts = [
     [vector(100, 160), vector(0, -5)],
     [vector(100, -160), vector(-5, 0)],
 ]
+# Matriz del tablero para la interfaz
 tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
@@ -36,28 +46,41 @@ tiles = [
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 ]
 
+'''
+Dibuja un cuadro vacio segun una posicion vectorial
+Entrada: Posicion Vectorial
+Salida: Ninguna
+'''
 def square(x, y):
-    "Draw square using path at (x, y)."
     path.up()
     path.goto(x, y)
     path.down()
     path.begin_fill()
 
+    # For para dibujar el cuadro a partir de turtle
     for count in range(4):
         path.forward(20)
         path.left(90)
 
     path.end_fill()
 
+'''
+Regresa el posicionamiento del punto en el recuadro
+Entrada: Una posicion vectorial donde se encuentra un punto
+Salida: Posicion del punto
+'''
 def offset(point):
-    "Return offset of point in tiles."
     x = (floor(point.x, 20) + 200) / 20
     y = (180 - floor(point.y, 20)) / 20
     index = int(x + y * 20)
     return index
 
+'''
+Regresa si true si es valido un posinamiento en un recuadro
+Entrada: Vector de una posicion en el plano
+Salida: Booleano, si la posicion es valida o no
+'''
 def valid(point):
-    "Return True if point is valid in tiles."
     index = offset(point)
 
     if tiles[index] == 0:
@@ -70,11 +93,16 @@ def valid(point):
 
     return point.x % 20 == 0 or point.y % 20 == 0
 
+'''
+Dibuja el tablero segun la ubicacion de los puntos regresados como verdaderos usando la matriz de recuadros
+Entrada: Niguna
+Salida: Ninguna
+'''
 def world():
-    "Draw world using path."
     bgcolor('black')
     path.color('blue')
 
+    # For para dibujar cada cuadro dentro de la interfaz
     for index in range(len(tiles)):
         tile = tiles[index]
 
@@ -88,18 +116,22 @@ def world():
                 path.goto(x + 10, y + 10)
                 path.dot(2, 'white')
 
+'''
+Genera el movimiento dentro del juego, tando de los fantasmas como de pacman y en caso de este ultimo sea alcanzado, es decir pierdes, se detiene el juego
+Entrada: Niguna
+Salida: Tiene un return que rompe el movimiento cuando un fantasma te alcanza, no regresa nada
+'''
 def move():
-    "Move pacman and all ghosts."
     writer.undo()
     writer.write(state['score'])
 
     clear()
-
+    # Revisa si se puede tomar la direccion mandada por el usuario y realiza el movimiento en caso de que sea valido
     if valid(pacman + aim):
         pacman.move(aim)
 
     index = offset(pacman)
-
+    # Revisa si pacman pasa encima de un punto, aumenta el marcador y elimina el punto en la interfaz
     if tiles[index] == 1:
         tiles[index] = 2
         state['score'] += 1
@@ -117,7 +149,7 @@ def move():
             point.move(course)
         else:
             
-            ''' Modificacion: Se aumenta la inteligencia de los fantasmas, ahora cuando esten en la misma escala ya se de x o de y que el usuario
+            ''' Modificacion: Se aumenta la inteligencia de los fantasmas, ahora cuando esten en la misma escala ya sea de "x" o de "y" que el usuario,
                 los fantasmas siempre se iran directo hacia pacman para intentar atraparlo'''
             if pacman.x == point.x and pacman.y > point.y and valid(point + vector(0,5)):
                 plan = vector(0,5)
@@ -146,14 +178,19 @@ def move():
 
     update()
 
+    # Revisa si un fantasma ha alcanzado a pacman y termina el movimiento en caso de que sea verdad
     for point, course in ghosts:
         if abs(pacman - point) < 20:
             return
 
     ontimer(move, 100)
 
+'''
+Cambia la direccion de pacman si es valida la entrada del usuario
+Entrada: Vector de posicion que definira la nueva direccion
+Salida: Ninguna
+'''
 def change(x, y):
-    "Change pacman aim if valid."
     if valid(pacman + vector(x, y)):
         aim.x = x
         aim.y = y
