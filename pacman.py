@@ -4,7 +4,7 @@ Equipo "Default":
 Daniel de Zamacona Madero - A01570576
 Elmer Osiel Avila Vargas - A00826359
 El programa despliega un juego de snake con variantes de colores y movimientos de la comida
-Fecha de Modificacion: 16/9/2020
+Fecha de Modificacion: 17/9/2020
 """
 from random import choice
 from turtle import *
@@ -76,8 +76,8 @@ def offset(point):
     return index
 
 '''
-Regresa si true si es valido un posinamiento en un recuadro
-Entrada: Vector de una posicion en el plano
+Regresa true si el punto (posicion vectorial) mandado se trata de un recuadro valido en el mapa
+Entrada: Vector de una posicion a validar
 Salida: Booleano, si la posicion es valida o no
 '''
 def valid(point):
@@ -94,7 +94,7 @@ def valid(point):
     return point.x % 20 == 0 or point.y % 20 == 0
 
 '''
-Dibuja el tablero segun la ubicacion de los puntos regresados como verdaderos usando la matriz de recuadros
+Dibuja el tablero segun la ubicacion de los puntos regresados como verdaderos usando la matriz "tiles", que es el mapa
 Entrada: Niguna
 Salida: Ninguna
 '''
@@ -186,7 +186,7 @@ def move():
     ontimer(move, 100)
 
 '''
-Cambia la direccion de pacman si es valida la entrada del usuario
+Cambia la direccion del movimiento de pacman si es valida la entrada del usuario
 Entrada: Vector de posicion que definira la nueva direccion
 Salida: Ninguna
 '''
