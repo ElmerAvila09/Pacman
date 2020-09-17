@@ -111,20 +111,35 @@ def move():
     goto(pacman.x + 10, pacman.y + 10)
     dot(20, 'yellow')
 
+    # Realiza la eleccion del movimiento de los fantasmas, y los mueve
     for point, course in ghosts:
         if valid(point + course):
             point.move(course)
         else:
-            options = [
-                vector(5, 0),
-                vector(-5, 0),
-                vector(0, 5),
-                vector(0, -5),
-            ]
-            plan = choice(options)
+            
+            ''' Modificacion: Se aumenta la inteligencia de los fantasmas, ahora cuando esten en la misma escala ya se de x o de y que el usuario
+                los fantasmas siempre se iran directo hacia pacman para intentar atraparlo'''
+            if pacman.x == point.x and pacman.y > point.y and valid(point + vector(0,5)):
+                plan = vector(0,5)
+            elif pacman.x == point.x and pacman.y < point.y and valid(point + vector(0,-5)):
+                plan = vector(0,-5)
+            elif pacman.y == point.y and pacman.x > point.x and valid(point + vector(5,0)):
+                plan = vector(5,0)
+            elif pacman.y == point.y and pacman.x < point.x and valid(point + vector(-5,0)):
+                plan = vector(-5,0)
+            else:
+                # En caso de que no este en una misma escala x o y, se realiza una eleccion al azar del siguiente movimiento
+                options = [
+                    vector(5, 0),
+                    vector(-5, 0),
+                    vector(0, 5),
+                    vector(0, -5),
+                ]
+                plan = choice(options)
+
+            # Se define el nuevo curso del fantasma segun la desicion anterior a partir de la variable plan
             course.x = plan.x
             course.y = plan.y
-
         up()
         goto(point.x + 10, point.y + 10)
         dot(20, 'red')
